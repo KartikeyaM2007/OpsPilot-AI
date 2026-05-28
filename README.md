@@ -1,4 +1,4 @@
-# 🚀 AI Task Allocation System
+# 🚀 OpsPilot- AI Task Allocation System
 > **An Intelligent Workforce Assignment & Candidate Re-Ranking Platform**  
 > Powered by **Agentic RAG** 🧠 • **Learning-to-Rank (LightGBM/RF)** 📊 • **SQLite Transactional Storage** 💾 • **Ollama-powered Local LLMs** 🦙
 
