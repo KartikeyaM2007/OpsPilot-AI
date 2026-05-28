@@ -1,373 +1,162 @@
-# AI Task Allocation System
+# 🚀 AI Task Allocation System
+> **An Intelligent Workforce Assignment & Candidate Re-Ranking Platform**  
+> Powered by **Agentic RAG** 🧠 • **Learning-to-Rank (LightGBM/RF)** 📊 • **SQLite Transactional Storage** 💾 • **Ollama-powered Local LLMs** 🦙
 
-An intelligent workforce assignment system for service/customer-support environments.
+---
 
-The system receives multiple incoming tasks and assigns each task to the most suitable available resource by checking:
+## 🌟 Overview
+The **AI Task Allocation System** is a next-generation workforce assignment platform designed for high-throughput customer support and service environments. It bridges deterministic business rule constraints with predictive AI re-ranking and generative agent reasoning to match incoming tasks with the most qualified, available resources.
 
-- idle status
-- shift timing
-- current workload
-- skill match
-- task category
-- past performance
-- experience level
-- average resolution speed
+```mermaid
+graph TD
+    A[Incoming Task] --> B[Task Ingestion & Parsing]
+    B --> C{Allocation Engine}
+    
+    subgraph "Hybrid Intelligent Routing Pipeline"
+        C -->|1. Rule Constraints| D[Deterministic Filter]
+        C -->|2. Semantic Context| E[Agentic RAG Engine]
+        C -->|3. Predictive Intelligence| F[Learning-to-Rank Model]
+    end
 
-## Current Version
+    D -->|Shift/Skills/Workload Checks| G[Candidate Score Matrix]
+    E -->|Past Case & SOP Retrieval| G
+    F -->|ML Model Re-ranking| G
+    
+    G --> H[Optimal Assignment Decision]
+    H --> I[SQLite Transaction DB]
+    H --> J[Live PowerShell Terminal Trace & Dashboard]
+```
 
-This is the MVP version.
+---
 
-It uses a transparent rule-based scoring engine first.  
-A trained ML ranking model can be added later using assignment history.
+## 🛠️ Key Architectural Pillars
 
-## Run Backend
+### 1. 🦙 Ollama-Powered Local LLM Ingestion
+Integrated with a robust, multi-provider LLM abstraction layer supporting:
+* **Ollama (Default Local)**: Run state-of-the-art models like `llama3.1` or `mistral` fully local with zero API cost.
+* **OpenAI & Gemini**: High-performance cloud fallbacks for production scale.
+* **Mock Ingestion Engines**: Generates highly realistic, context-aware tasks and resource profiles dynamically for realistic sandbox testing.
 
+### 2. 🧠 Agentic Retrieval-Augmented Generation (RAG)
+For complex assignments, the `POST /assign/agentic` pipeline executes an advanced multi-agent workflow:
+1. **Task Parser Agent**: Uses LLM-driven intelligence to parse unstructured titles/descriptions and extract strict categories, priority, and required skill matrices.
+2. **Context Retrieval**: Pulls matching historical cases from SQLite and retrieves specific standard operating procedures (SOPs) from the knowledge base.
+3. **Evidence Scoring**: Injects a dynamically calculated "RAG bonus" into the final allocation matrix based on historical resource success/escalation evidence.
+4. **Scoring Engine Safeguard**: The LLM informs and explains, but the deterministic scoring engine retains final authority, ensuring 100% auditability and constraint compliance.
+
+### 3. 🎯 Learning-to-Rank ML Engine
+The platform dynamically collects telemetry from all assignment actions, logging all eligible candidates into a structured dataset to train custom scoring models.
+* **LightGBM Ranker**: Standard pairwise/listwise ranking optimal for matching group task-to-resource layouts.
+* **Random Forest Classifier**: High-robustness baseline model for feature importance exploration.
+* **Random Baseline**: Comparison model for testing and validation.
+* **Feature Importance**: Analyzes and exposes which features (e.g., workload, speed, skill-match) most heavily influence model recommendations.
+
+### 4. 💾 Relational SQLite Database
+Replaced flat CSV storage with a robust, ACID-compliant SQLite relational persistence layer (`data/app.db`):
+* Relational tables for `resources`, `tasks`, `task_history`, `past_cases`, `assignment_logs`, and `ml_training_candidates`.
+* Provides lightning-fast runtime query execution while retaining CSV backups for portability.
+
+### 5. 💻 Windows PowerShell-Style Live Terminal Monitor
+A live, black-and-white terminal monitor positioned at the top of the frontend dashboard:
+* Streams system trace events in real-time (APIs, SQLite reads/writes, LLM generation, ML training stages).
+* Implements smart filters, pause/resume capability, and rate-limiting (excluding noisy health poll checks) to facilitate clean, professional live demos.
+
+---
+
+## ⚡ Quick Start
+
+### 📋 Prerequisites
+* Python 3.10+
+* Node.js v18+
+* Ollama (Optional, for offline LLM support)
+
+---
+
+### 1. ⚙️ Backend Setup
+
+#### Clone & Install Dependencies
 ```bash
 cd backend
 python -m venv .venv
+# On Windows PowerShell:
 .venv\Scripts\activate
+# On Linux/macOS:
+source .venv/bin/activate
+
 pip install -r requirements.txt
-uvicorn app.main:app --reload --port 8000
 ```
 
-Open:
-
-```txt
-http://127.0.0.1:8000
-http://127.0.0.1:8000/docs
-```
-
-## Run Frontend
-
-Open a second terminal:
-
+#### Configure Environment Variables
+Copy the template `.env` and adjust the variables:
 ```bash
-cd frontend
-npm install
-npm run dev
+cp .env.example .env
+```
+Inside `backend/.env`:
+```env
+LLM_PROVIDER=ollama
+OLLAMA_BASE_URL=http://localhost:11434
+OLLAMA_MODEL=llama3.1
+
+# Optional cloud API keys:
+OPENAI_API_KEY=
+GEMINI_API_KEY=
 ```
 
-Open the Vite URL shown in the terminal.
-
-## Important Endpoints
-
-```txt
-GET  /resources
-GET  /tasks
-GET  /history
-POST /assign
-POST /assign/batch
-POST /assign/sample
-```
-
-## Example Assignment Logic
-
-For every task-resource pair, the backend calculates:
-
-```txt
-final_score =
-  skill_match * 0.30
-+ availability * 0.20
-+ workload * 0.15
-+ category_match * 0.15
-+ past_performance * 0.10
-+ experience * 0.05
-+ speed * 0.05
-```
-
-Resources are rejected before scoring if they are:
-
-- offline
-- outside shift timing
-- already at max workload
-- missing required skills
-
-## Next Upgrade
-
-Add a trained ranking model using historical data:
-
-- task type
-- required skills
-- resource assigned
-- workload at assignment time
-- completion time
-- success/failure
-- customer rating
-- escalation status
-
-Recommended model later:
-
-```txt
-LightGBM Ranker or XGBoost Ranker
-```
-
-## Agentic RAG Upgrade
-
-This version includes an Agentic RAG assignment path:
-
-```txt
-POST /assign/agentic
-```
-
-Flow:
-
-```txt
-Task input
-↓
-Task parser detects category, priority, and skills
-↓
-RAG retrieves similar past cases from data/past_cases.csv
-↓
-RAG retrieves relevant SOP/policy context from data/knowledge_base/support_policy.txt
-↓
-Scoring engine checks idle status, shift timing, workload, skills, and performance
-↓
-RAG bonus adjusts score using similar-case success/escalation evidence
-↓
-System returns final assignment with explanation and retrieved evidence
-```
-
-The LLM/agent layer should not blindly decide the final assignment.  
-The scoring/scheduling engine remains the final decision layer so the system is auditable.
-
-## Agentic Workflow Trace
-
-The Agentic RAG endpoint now returns a workflow trace:
-
-```txt
-Task Intake
-→ Task Parser Agent
-→ RAG Retriever
-→ Resource State Checker
-→ Scoring Engine
-→ RAG Score Adjuster
-→ Assignment Decision
-→ Explanation Generator
-```
-
-The frontend shows this trace under each Agentic RAG result, making the decision pipeline visible and explainable.
-
-## Assignment History Logging
-
-The system now logs every assignment to:
-
-```txt
-data/assignment_logs.csv
-```
-
-Logged fields include:
-
-```txt
-mode
-task title
-category
-priority
-required skills
-assigned resource
-final score
-base score
-RAG bonus
-explanation
-timestamp
-```
-
-This assignment log becomes the future training dataset for the ML ranking model.
-
-## Trainable ML Ranking Model
-
-The project now includes a trainable candidate-ranking model.
-
-New files/endpoints:
-
-```txt
-backend/app/ml_ranking_model.py
-GET  /ml/status
-POST /ml/train
-POST /assign/ml
-data/ml_training_candidates.csv
-data/models/assignment_ranker.joblib
-```
-
-How it works:
-
-```txt
-1. Every assignment logs all candidate resources.
-2. The selected resource gets label_selected = 1.
-3. Non-selected candidates get label_selected = 0.
-4. /ml/train trains a RandomForest ranking classifier.
-5. /assign/ml uses Agentic RAG first, then re-ranks eligible candidates using the trained model.
-```
-
-Install the added backend dependencies:
-
-```bash
-pip install -r backend/requirements.txt
-```
-
-## Analytics Dashboard
-
-The app now includes a live analytics dashboard.
-
-New endpoint:
-
-```txt
-GET /analytics/summary
-```
-
-Dashboard includes:
-
-```txt
-resource count
-idle/busy/offline resource status
-capacity used
-assignment count
-average assignment score
-ML model readiness
-ML training row count
-assignment distribution by resource
-assignment distribution by task category
-assignment distribution by assignment mode
-priority breakdown
-resource workload bars
-top ML feature importances
-```
-
-## SQLite Persistence
-
-The app now uses SQLite as the primary persistence layer.
-
-Database file:
-
-```txt
-data/app.db
-```
-
-Migrated tables:
-
-```txt
-resources
-tasks
-task_history
-past_cases
-assignment_logs
-ml_training_candidates
-```
-
-New endpoint:
-
-```txt
-GET /db/status
-```
-
-Existing CSV files are backed up in:
-
-```txt
-data/csv_backup_before_sqlite/
-```
-
-The app still keeps the CSV files as backup/sample data, but runtime reads and writes now go through SQLite.
-
-## Multi-Provider LLM Layer
-
-The app now supports optional LLM providers:
-
-```txt
-Ollama local
-OpenAI
-Gemini
-Off / fallback mode
-```
-
-New endpoints:
-
-```txt
-GET  /llm/status
-POST /mock/task
-POST /mock/resource
-```
-
-The LLM layer is used for mock task/resource generation. The final assignment still comes from deterministic scoring, Agentic RAG, constraints, and the ML ranker.
-
-Local Ollama setup:
-
+#### Start Local LLM (Optional)
+If using Ollama:
 ```bash
 ollama serve
 ollama pull llama3.1
 ```
 
-Copy backend/.env.example to backend/.env and configure:
-
-```env
-LLM_PROVIDER=ollama
-OLLAMA_BASE_URL=http://localhost:11434
-OLLAMA_MODEL=llama3.1
+#### Launch Backend Server
+```bash
+uvicorn app.main:app --reload --port 8000
 ```
+* **API Documentation**: [http://127.0.0.1:8000/docs](http://127.0.0.1:8000/docs)
+* **Database Status**: [http://127.0.0.1:8000/db/status](http://127.0.0.1:8000/db/status)
 
-## Selectable ML Strategy
+---
 
-The frontend now lets you choose between multiple ML strategies:
+### 2. 🎨 Frontend Dashboard Setup
 
-```txt
-LightGBM Ranker - best option for grouped task-to-resource ranking
-Random Forest - baseline classifier
-Random Baseline - comparison/debug baseline only
+Open a second terminal window:
+```bash
+cd frontend
+npm install
+npm run dev
 ```
+Open the local URL shown in your terminal (usually `http://localhost:5173`).
 
-Endpoints support the selected strategy:
+---
 
-```txt
-POST /ml/train?model_type=lightgbm_ranker
-POST /ml/train?model_type=random_forest
-POST /ml/train?model_type=random_baseline
-POST /assign/ml?model_type=lightgbm_ranker
-```
+## 📊 Allocation Logic Blueprint
 
-The selected model is still saved at:
+For every incoming task, candidate resources are checked against deterministic filters and ranked:
 
-```txt
-data/models/assignment_ranker.joblib
-```
+### Pre-Scoring Hard Rejections
+* **Offline Status**: Candidate must be active.
+* **Shift Timing**: Task intake time must fall within the resource's shift windows.
+* **Capacity Limit**: Candidate's current workload must be below their maximum capacity.
+* **Skill Missing**: Candidate must possess the task's required core skills.
 
-The model metadata includes model_type, Hit@1, task groups, and top features.
+### Hybrid Score Calculation
+$$Score = \text{Skills } (30\%) + \text{Availability } (20\%) + \text{Workload } (15\%) + \text{Category Match } (15\%) + \text{Performance } (10\%) + \text{Exp } (5\%) + \text{Speed } (5\%)$$
 
-## Backend Terminal Monitor
+---
 
-The frontend now includes a live terminal-style monitor at the top of the dashboard.
+## 🔌 API Reference
 
-New endpoints:
+### Allocation Endpoints
+* `POST /assign` - Evaluates candidates via deterministic scoring rules.
+* `POST /assign/agentic` - Runs Ollama/LLM RAG with document retrieval and explanation generation.
+* `POST /assign/ml` - Re-ranks eligible candidates using the trained LightGBM/Random Forest model.
 
-```txt
-GET    /system/events
-GET    /system/health
-DELETE /system/events
-```
+### Machine Learning
+* `GET  /ml/status` - Checks training logs, dataset size, and trained model features.
+* `POST /ml/train` - Trains a chosen strategy model (`?model_type=lightgbm_ranker`, `random_forest`).
 
-It shows events for:
-
-```txt
-API calls
-SQLite health
-LLM/Ollama status
-mock task/resource generation
-resource add/update/delete
-normal assignment
-Agentic RAG assignment
-ML assignment
-ML strategy training
-analytics loading
-assignment history loading
-```
-
-This makes the full backend workflow visible during demos.
-
-## Windows-Style Backend Terminal Monitor
-
-The terminal monitor now uses a black-and-white Windows PowerShell-style UI.
-
-Noise reduction:
-- `/system/events` polling is not logged.
-- `/system/health` polling is not logged.
-- Health polling is slower.
-- Auto-scroll is off by default so manual scrolling is usable.
-- Pause/Resume can freeze the event stream during demos.
-
+### Mock Generator & Data
+* `POST /mock/task` - Ingests a new realistic task using LLM generation.
+* `POST /mock/resource` - Ingests a new realistic resource using LLM generation.
+* `GET  /analytics/summary` - Provides aggregate data for dashboard visualization.
