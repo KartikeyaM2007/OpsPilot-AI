@@ -1,0 +1,6 @@
+resource_id,name,skills,experience_level,status,current_tasks,max_tasks,shift_start,shift_end,success_rate,avg_resolution_minutes,handled_categories
+R2,Rohit,technical_support;api;debugging;payments;backend,5,busy,2,3,09:00,18:00,0.95,45.0,technical;payment
+R3,Neha,customer_support;account_management;general,3,idle,0,4,09:00,18:00,0.86,50.0,account;general
+R4,Priya,billing;customer_support;refunds,4,offline,0,3,14:00,22:00,0.9,38.0,billing;refund
+R5,Joe,technical_support;api;customer_support;debugging,3,available,1,4,09:00,18:00,0.82,60.0,technical;general
+R6,Sara,billing;payments;customer_support,3,idle,0,3,09:00,18:00,0.88,45.0,payment;billing

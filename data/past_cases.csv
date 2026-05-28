@@ -1,0 +1,9 @@
+case_id,title,description,category,skills,resource_name,completed_minutes,success,customer_rating,escalated,resolution_notes
+C1,Customer payment failed after card checkout,Payment failed after checkout but amount was debited,payment,"payments;billing;customer_support",Amit,32,true,5,false,Checked gateway logs verified transaction and guided refund flow
+C2,UPI payment stuck during checkout,UPI payment showed pending and customer could not complete order,payment,"payments;billing;customer_support",Sara,28,true,5,false,Matched gateway reference and resolved with payment retry instructions
+C3,Refund for duplicate charge,Customer was charged twice and requested urgent refund,billing,"billing;refunds;customer_support",Amit,36,true,5,false,Validated duplicate charge and initiated refund under billing SOP
+C4,API timeout during partner integration,Partner API response was slow and timing out,technical,"technical_support;api;debugging",Rohit,42,true,5,false,Debugged API latency and escalated infra metrics check
+C5,Login locked account,User could not login because account was locked,account,"account_management;customer_support",Neha,48,true,4,false,Verified identity and reset account lock state
+C6,Payment failure assigned to technical queue,Payment issue was assigned to technical resource without billing context,payment,"payments;billing;customer_support",Rohit,95,false,2,true,Escalated because billing/payment process knowledge was missing
+C7,Refund policy confusion,Customer asked for refund after failed service renewal,billing,"billing;refunds;customer_support",Priya,41,true,5,false,Followed refund policy and explained SLA to customer
+C8,General dashboard usage question,Customer asked how to use analytics dashboard,general,"customer_support",Joe,25,true,4,false,Shared dashboard guide and resolved without escalation

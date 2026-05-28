@@ -1,0 +1,6 @@
+history_id,task_id,resource_id,category,completed_minutes,success,customer_rating,escalated
+H1,T_old_1,R1,payment,30,true,5,false
+H2,T_old_2,R2,technical,40,true,5,false
+H3,T_old_3,R3,account,55,true,4,false
+H4,T_old_4,R4,billing,35,true,5,false
+H5,T_old_5,R5,technical,70,true,4,true

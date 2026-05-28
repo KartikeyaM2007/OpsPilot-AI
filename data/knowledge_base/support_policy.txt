@@ -1,0 +1,17 @@
+Payment Failure SOP
+For payment failure, checkout failure, UPI pending, card failure, or amount debited cases, prefer agents with payment and billing experience. High priority payment tasks should be handled by agents with previous successful payment cases and low current workload.
+
+Refund SOP
+For refund or duplicate charge cases, prefer billing/refund specialists. If the customer says charged twice, duplicate debit, failed payment with deduction, or urgent refund, the system should consider refund experience and customer support skill.
+
+Technical Incident SOP
+For API latency, server error, timeout, production bug, or integration failure, prefer technical support agents with API/debugging skills. Urgent technical issues should not be assigned to agents without technical debugging experience.
+
+Account Support SOP
+For login, password, locked account, signup, or profile access problems, prefer account management and customer support agents.
+
+Workload Policy
+Never assign a task to a resource that is offline, outside shift timing, or already at maximum workload. Prefer idle resources when skill match and past performance are acceptable.
+
+Escalation Policy
+If similar past cases show escalation for a resource, reduce confidence for that resource on similar future tasks. Successful similar cases should increase confidence.

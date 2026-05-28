@@ -1,0 +1,6 @@
+task_id,title,description,priority,category,required_skills,sla_minutes
+T1,Customer payment failed,Customer says payment failed after checkout using card,high,payment,"payments;billing;customer_support",60
+T2,Login not working,User cannot login and account may be locked,medium,account,"account_management;customer_support",120
+T3,API latency issue,Partner reports API response is slow and sometimes timing out,urgent,technical,"technical_support;api;debugging",45
+T4,Refund request,Customer was charged twice and wants refund,medium,billing,"billing;refunds;customer_support",180
+T5,General product question,Customer is asking how to use the dashboard,low,general,"customer_support",240
